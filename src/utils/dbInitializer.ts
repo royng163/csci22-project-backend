@@ -68,9 +68,9 @@ const initializeDB = async (): Promise<void> => {
 			}
 		}
 
-		console.log("Data import completed.");
+		console.log("Database initialization completed.");
 	} catch (error) {
-		console.error("Error fetching data:", error);
+		console.error("Error initializing database:", error);
 	}
 };
 
