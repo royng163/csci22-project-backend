@@ -17,16 +17,43 @@ const getEvents = async (req: Request, res: Response) => {
 // @route   POST /api/events
 // @access  Private/Admin
 const createEvent = async (req: Request, res: Response) => {
-	const { title, location, dateTime, description, presenter, price } = req.body;
+	const {
+		eventId,
+		title,
+		titleChinese,
+		dateTime,
+		dateTimeChinese,
+		duration,
+		durationChinese,
+		location,
+		price,
+		description,
+		descriptionChinese,
+		url,
+		ticketAgentUrl,
+		telephone,
+		presenter,
+		presenterChinese,
+	} = req.body;
 
 	try {
 		const event = new Event({
+			eventId,
 			title,
-			location,
+			titleChinese,
 			dateTime,
-			description,
-			presenter,
+			dateTimeChinese,
+			duration,
+			durationChinese,
+			location,
 			price,
+			description,
+			descriptionChinese,
+			url,
+			ticketAgentUrl,
+			telephone,
+			presenter,
+			presenterChinese,
 		});
 
 		const createdEvent = await event.save();
@@ -40,18 +67,45 @@ const createEvent = async (req: Request, res: Response) => {
 // @route   PUT /api/events/:id
 // @access  Private/Admin
 const updateEvent = async (req: Request, res: Response) => {
-	const { title, location, dateTime, description, presenter, price } = req.body;
+	const {
+		eventId,
+		title,
+		titleChinese,
+		dateTime,
+		dateTimeChinese,
+		duration,
+		durationChinese,
+		location,
+		price,
+		description,
+		descriptionChinese,
+		url,
+		ticketAgentUrl,
+		telephone,
+		presenter,
+		presenterChinese,
+	} = req.body;
 
 	try {
 		const event = await Event.findById(req.params.id);
 
 		if (event) {
+			event.eventId = eventId || event.eventId;
 			event.title = title || event.title;
-			event.location = location || event.location;
+			event.titleChinese = titleChinese || event.titleChinese;
 			event.dateTime = dateTime || event.dateTime;
-			event.description = description || event.description;
-			event.presenter = presenter || event.presenter;
+			event.dateTimeChinese = dateTimeChinese || event.dateTimeChinese;
+			event.duration = duration || event.duration;
+			event.durationChinese = durationChinese || event.durationChinese;
+			event.location = location || event.location;
 			event.price = price || event.price;
+			event.description = description || event.description;
+			event.descriptionChinese = descriptionChinese || event.descriptionChinese;
+			event.url = url || event.url;
+			event.ticketAgentUrl = ticketAgentUrl || event.ticketAgentUrl;
+			event.telephone = telephone || event.telephone;
+			event.presenter = presenter || event.presenter;
+			event.presenterChinese = presenterChinese || event.presenterChinese;
 
 			const updatedEvent = await event.save();
 			res.json(updatedEvent);

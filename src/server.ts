@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db";
-import fetchData from "./utils/dataFetcher";
+import initializeDB from "./utils/dbInitializer";
 import authRoutes from "./routes/authRoutes";
 import locationRoutes from "./routes/locationRoutes";
 import eventRoutes from "./routes/eventRoutes";
@@ -14,7 +14,7 @@ dotenv.config();
 
 // Connect to database
 connectDB().then(() => {
-	fetchData();
+	initializeDB();
 });
 
 const app = express();

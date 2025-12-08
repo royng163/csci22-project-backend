@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Document, model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
 export interface IUser extends Document {
@@ -46,5 +46,5 @@ UserSchema.methods.matchPassword = async function (enteredPassword: string): Pro
 	return await bcrypt.compare(enteredPassword, this.password!);
 };
 
-const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
+const User = model("User", UserSchema);
 export default User;

@@ -1,20 +1,28 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 
-export interface ILocation extends Document {
+export interface ILocation {
+	locationId: string;
 	name: string;
+	nameChinese?: string;
 	latitude: number;
 	longitude: number;
-	events?: any[]; // Virtual
-	comments?: any[]; // Virtual
+	events?: any[];
+	comments?: any[];
 }
 
-const LocationSchema: Schema = new Schema(
+const LocationSchema = new Schema(
 	{
-		name: {
-			// Venue name
+		locationId: {
 			type: String,
 			required: true,
 			unique: true,
+		},
+		name: {
+			type: String,
+			required: true,
+		},
+		nameChinese: {
+			type: String,
 		},
 		latitude: {
 			type: Number,
@@ -47,5 +55,5 @@ LocationSchema.virtual("comments", {
 	justOne: false,
 });
 
-const Location: Model<ILocation> = mongoose.model<ILocation>("Location", LocationSchema);
+const Location = model("Location", LocationSchema);
 export default Location;

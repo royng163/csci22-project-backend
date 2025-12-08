@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Location from "../models/Location";
+import Location, { ILocation } from "../models/Location";
 
 // @desc    Get all locations
 // @route   GET /api/locations
@@ -13,7 +13,7 @@ const getLocations = async (req: Request, res: Response) => {
 			query.name = { $regex: keyword, $options: "i" };
 		}
 
-		let locations = await Location.find(query).populate("events");
+		let locations = (await Location.find(query).populate("events")) as ILocation[];
 
 		// Sorting (basic implementation)
 		if (sort === "name") {
@@ -55,11 +55,13 @@ const getLocationById = async (req: Request, res: Response) => {
 // @route   POST /api/locations
 // @access  Private/Admin
 const createLocation = async (req: Request, res: Response) => {
-	const { name, latitude, longitude } = req.body;
+	const { locationId, name, nameChinese, latitude, longitude } = req.body;
 
 	try {
 		const location = new Location({
+			locationId,
 			name,
+			nameChinese,
 			latitude,
 			longitude,
 		});
@@ -75,13 +77,15 @@ const createLocation = async (req: Request, res: Response) => {
 // @route   PUT /api/locations/:id
 // @access  Private/Admin
 const updateLocation = async (req: Request, res: Response) => {
-	const { name, latitude, longitude } = req.body;
+	const { locationId, name, nameChinese, latitude, longitude } = req.body;
 
 	try {
 		const location = await Location.findById(req.params.id);
 
 		if (location) {
+			location.locationId = locationId || location.locationId;
 			location.name = name || location.name;
+			location.nameChinese = nameChinese || location.nameChinese;
 			location.latitude = latitude || location.latitude;
 			location.longitude = longitude || location.longitude;
 

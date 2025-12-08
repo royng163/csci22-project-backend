@@ -66,4 +66,4 @@ src/
 7. Development Guidelines
 ================================================================================
 - TypeScript: Clearly define interface and type for every variable.
-- Formatting: A .prettierrc file is included. Please install Prettier to format code.
+- Formatting: Please install Prettier to format code. The .prettierrc config file standardize the formatting.
