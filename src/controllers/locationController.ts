@@ -15,13 +15,11 @@ const getLocations = async (req: Request, res: Response) => {
 
 		let locations = (await Location.find(query).populate("events")) as ILocation[];
 
-		// Sorting (basic implementation)
-		if (sort === "name") {
-			locations.sort((a, b) => a.name.localeCompare(b.name));
-		} else if (sort === "events") {
-			locations.sort((a, b) => (b.events?.length || 0) - (a.events?.length || 0));
-		}
-		// Distance sorting would require user coordinates passed in query
+		// Filter locations that host at least 3 events
+		locations = locations.filter((location) => location.events && location.events.length >= 3);
+
+		// Limit to 10 locations
+		locations = locations.slice(0, 10);
 
 		res.json(locations);
 	} catch (error: any) {
