@@ -6,7 +6,7 @@ import Event from "../models/Event";
 // @access  Public
 const getEvents = async (req: Request, res: Response) => {
 	try {
-		const events = await Event.find().populate("location");
+		const events = await Event.find().populate("venue");
 		res.json(events);
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
@@ -25,7 +25,7 @@ const createEvent = async (req: Request, res: Response) => {
 		dateTimeChinese,
 		duration,
 		durationChinese,
-		location,
+		venue,
 		price,
 		description,
 		descriptionChinese,
@@ -45,7 +45,7 @@ const createEvent = async (req: Request, res: Response) => {
 			dateTimeChinese,
 			duration,
 			durationChinese,
-			location,
+			venue,
 			price,
 			description,
 			descriptionChinese,
@@ -75,7 +75,7 @@ const updateEvent = async (req: Request, res: Response) => {
 		dateTimeChinese,
 		duration,
 		durationChinese,
-		location,
+		venue,
 		price,
 		description,
 		descriptionChinese,
@@ -97,7 +97,7 @@ const updateEvent = async (req: Request, res: Response) => {
 			event.dateTimeChinese = dateTimeChinese || event.dateTimeChinese;
 			event.duration = duration || event.duration;
 			event.durationChinese = durationChinese || event.durationChinese;
-			event.location = location || event.location;
+			event.venue = venue || event.venue;
 			event.price = price || event.price;
 			event.description = description || event.description;
 			event.descriptionChinese = descriptionChinese || event.descriptionChinese;

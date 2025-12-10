@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 
-export interface ILocation {
-	locationId: string;
+export interface IVenue {
+	venueId: string;
 	name: string;
 	nameChinese?: string;
 	latitude: number;
@@ -10,9 +10,9 @@ export interface ILocation {
 	comments?: any[];
 }
 
-const LocationSchema = new Schema(
+const VenueSchema = new Schema(
 	{
-		locationId: {
+		venueId: {
 			type: String,
 			required: true,
 			unique: true,
@@ -40,20 +40,20 @@ const LocationSchema = new Schema(
 );
 
 // Virtual populate for events
-LocationSchema.virtual("events", {
+VenueSchema.virtual("events", {
 	ref: "Event",
 	localField: "_id",
-	foreignField: "location",
+	foreignField: "venue",
 	justOne: false,
 });
 
 // Virtual populate for comments
-LocationSchema.virtual("comments", {
+VenueSchema.virtual("comments", {
 	ref: "Comment",
 	localField: "_id",
-	foreignField: "location",
+	foreignField: "venue",
 	justOne: false,
 });
 
-const Location = model("Location", LocationSchema);
-export default Location;
+const Venue = model("Venue", VenueSchema);
+export default Venue;

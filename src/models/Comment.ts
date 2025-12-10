@@ -6,9 +6,9 @@ const CommentSchema: Schema = new Schema({
 		ref: "User",
 		required: true,
 	},
-	location: {
+	venue: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "Location",
+		ref: "Venue",
 		required: true,
 	},
 	text: {

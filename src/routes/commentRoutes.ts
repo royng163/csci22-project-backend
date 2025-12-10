@@ -4,6 +4,6 @@ import { protect } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.post("/:locationId", protect, addComment);
+router.post("/:venueId", protect, addComment);
 
 export default router;

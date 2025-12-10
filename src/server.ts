@@ -4,7 +4,7 @@ import cors from "cors";
 import connectDB from "./config/db";
 import initializeDB from "./utils/dbInitializer";
 import authRoutes from "./routes/authRoutes";
-import locationRoutes from "./routes/locationRoutes";
+import venueRoutes from "./routes/venueRoutes";
 import eventRoutes from "./routes/eventRoutes";
 import userRoutes from "./routes/userRoutes";
 import commentRoutes from "./routes/commentRoutes";
@@ -25,7 +25,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/locations", locationRoutes);
+app.use("/api/venues", venueRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/comments", commentRoutes);

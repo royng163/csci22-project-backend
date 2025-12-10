@@ -8,10 +8,10 @@ const generateToken = (id: string) => {
 	});
 };
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
+// @desc    Sign up a new user
+// @route   POST /api/auth/signup
 // @access  Public
-const registerUser = async (req: Request, res: Response) => {
+const signupUser = async (req: Request, res: Response) => {
 	const { username, password } = req.body;
 
 	const userExists = await User.findOne({ username });
@@ -57,4 +57,4 @@ const loginUser = async (req: Request, res: Response) => {
 	}
 };
 
-export { registerUser, loginUser };
+export { signupUser, loginUser };

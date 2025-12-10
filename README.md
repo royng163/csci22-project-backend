@@ -48,16 +48,16 @@ npm run build
 npm start
 ```
 
-Note: On the very first run, the server will automatically fetch XML data from the LCSD API and populate the MongoDB database with initial locations and events.
+Note: On the very first run, the server will automatically fetch XML data from the LCSD API and populate the MongoDB database with initial venues and events.
 
 ## 5. Project Structure
 
 ```
 src/
 ├── config/         # Database connection
-├── controllers/    # Request logic (Auth, Events, Locations, Users)
+├── controllers/    # Request logic (Auth, Events, Venues, Users)
 ├── middleware/     # Access mode validation
-├── models/         # Mongoose Schemas (User, Location, Event, Comment)
+├── models/         # Mongoose Schemas (User, Venue, Event, Comment)
 ├── routes/         # API Route definitions
 ├── utils/          # Helper functions
 └── server.ts       # App entry point

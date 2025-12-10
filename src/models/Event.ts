@@ -26,9 +26,9 @@ const EventSchema: Schema = new Schema({
 	durationChinese: {
 		type: String,
 	},
-	location: {
+	venue: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "Location",
+		ref: "Venue",
 		required: true,
 	},
 	price: {

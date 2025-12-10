@@ -27,7 +27,7 @@ const UserSchema: Schema = new Schema({
 	favorites: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Location",
+			ref: "Venue",
 		},
 	],
 });

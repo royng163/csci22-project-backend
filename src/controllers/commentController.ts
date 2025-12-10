@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
 import Comment from "../models/Comment";
-import Location from "../models/Location";
+import Venue from "../models/Venue";
 
 // @desc    Add a comment
-// @route   POST /api/comments/:locationId
+// @route   POST /api/comments/:venueId
 // @access  Private
 const addComment = async (req: Request, res: Response) => {
 	const { text } = req.body;
-	const locationId = req.params.locationId;
+	const venueId = req.params.venueId;
 
 	try {
-		const location = await Location.findById(locationId);
+		const venue = await Venue.findById(venueId);
 
-		if (!location) {
-			return res.status(404).json({ message: "Location not found" });
+		if (!venue) {
+			return res.status(404).json({ message: "Venue not found" });
 		}
 
 		if (!req.user) {
@@ -22,7 +22,7 @@ const addComment = async (req: Request, res: Response) => {
 
 		const comment = await Comment.create({
 			user: req.user._id,
-			location: locationId,
+			venue: venueId,
 			text,
 		});
 
