@@ -12,7 +12,7 @@ const generateToken = (id: string) => {
 // @route   POST /api/auth/signup
 // @access  Public
 const signupUser = async (req: Request, res: Response) => {
-	const { username, password } = req.body;
+	const { username, email, password } = req.body;
 
 	const userExists = await User.findOne({ username });
 
@@ -22,6 +22,7 @@ const signupUser = async (req: Request, res: Response) => {
 
 	const user = await User.create({
 		username,
+		email,
 		password,
 	});
 
@@ -29,6 +30,7 @@ const signupUser = async (req: Request, res: Response) => {
 		res.status(201).json({
 			_id: user._id,
 			username: user.username,
+			email: user.email,
 			role: user.role,
 			token: generateToken(user._id.toString()),
 		});
@@ -49,6 +51,7 @@ const loginUser = async (req: Request, res: Response) => {
 		res.json({
 			_id: user._id,
 			username: user.username,
+			email: user.email,
 			role: user.role,
 			token: generateToken(user._id.toString()),
 		});

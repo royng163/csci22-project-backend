@@ -15,6 +15,7 @@ const getUserProfile = async (req: Request, res: Response) => {
 		res.json({
 			_id: user._id,
 			username: user.username,
+			email: user.email,
 			role: user.role,
 			favorites: user.favorites,
 		});
@@ -79,7 +80,7 @@ const getUsers = async (req: Request, res: Response) => {
 // @route   POST /api/users
 // @access  Private/Admin
 const createUser = async (req: Request, res: Response) => {
-	const { username, password, role } = req.body;
+	const { username, email, password, role } = req.body;
 
 	try {
 		const userExists = await User.findOne({ username });
@@ -89,6 +90,7 @@ const createUser = async (req: Request, res: Response) => {
 
 		const user = await User.create({
 			username,
+			email,
 			password,
 			role: role || "user",
 		});
@@ -97,6 +99,7 @@ const createUser = async (req: Request, res: Response) => {
 			res.status(201).json({
 				_id: user._id,
 				username: user.username,
+				email: user.email,
 				role: user.role,
 			});
 		} else {
@@ -119,10 +122,20 @@ const updateUser = async (req: Request, res: Response) => {
 			if (req.body.username) {
 				const userExists = await User.findOne({ username: req.body.username });
 				if (userExists) {
-					return res.status(400).json({ message: "User with this username already exists" });
+					return res.status(400).json({ message: "Provided username already used by another user" });
 				}
 
 				user.username = req.body.username;
+			}
+
+			// Update email if provided and not taken
+			if (req.body.email) {
+				const emailExists = await User.findOne({ email: req.body.email });
+				if (emailExists) {
+					return res.status(400).json({ message: "Provided email already used by another user" });
+				}
+
+				user.email = req.body.email;
 			}
 
 			// Update role if provided
@@ -138,6 +151,7 @@ const updateUser = async (req: Request, res: Response) => {
 			res.json({
 				_id: updatedUser._id,
 				username: updatedUser.username,
+				email: updatedUser.email,
 				role: updatedUser.role,
 			});
 		} else {
