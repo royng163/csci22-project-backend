@@ -139,7 +139,15 @@ const updateUser = async (req: Request, res: Response) => {
 			}
 
 			// Update role if provided
-			user.role = req.body.role || user.role;
+			if (req.body.role) {
+				if (user.role === "admin" && req.body.role !== "admin") {
+					const adminCount = await User.countDocuments({ role: "admin" });
+					if (adminCount <= 1) {
+						return res.status(400).json({ message: "There must be at least one admin user" });
+					}
+				}
+				user.role = req.body.role;
+			}
 
 			// Update password if provided
 			if (req.body.password) {
