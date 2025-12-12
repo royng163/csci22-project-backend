@@ -119,7 +119,7 @@ const updateUser = async (req: Request, res: Response) => {
 
 		if (user) {
 			// Update username if provided and not taken
-			if (req.body.username) {
+			if (req.body.username && req.body.username !== user.username) {
 				const userExists = await User.findOne({ username: req.body.username });
 				if (userExists) {
 					return res.status(400).json({ message: "Provided username already used by another user" });
@@ -129,7 +129,7 @@ const updateUser = async (req: Request, res: Response) => {
 			}
 
 			// Update email if provided and not taken
-			if (req.body.email) {
+			if (req.body.email && req.body.email !== user.email) {
 				const emailExists = await User.findOne({ email: req.body.email });
 				if (emailExists) {
 					return res.status(400).json({ message: "Provided email already used by another user" });
@@ -139,7 +139,7 @@ const updateUser = async (req: Request, res: Response) => {
 			}
 
 			// Update role if provided
-			if (req.body.role) {
+			if (req.body.role && req.body.role !== user.role) {
 				if (user.role === "admin" && req.body.role !== "admin") {
 					const adminCount = await User.countDocuments({ role: "admin" });
 					if (adminCount <= 1) {
