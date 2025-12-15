@@ -6,26 +6,34 @@ import mongoose from "mongoose";
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = async (req: Request, res: Response) => {
-	if (!req.user) {
-		return res.status(401).json({ message: "Not authorized" });
-	}
-	const user = await User.findById(req.user._id).populate({
+    if (!req.user) {
+        return res.status(401).json({ message: "Not authorized" });
+    }
+    const user = await User.findById(req.user._id).populate({
         path: "favorites",
         populate: {
             path: "events",
         },
     });
-	if (user) {
-		res.json({
-			_id: user._id,
-			username: user.username,
-			email: user.email,
-			role: user.role,
-			favorites: user.favorites,
-		});
-	} else {
-		res.status(404).json({ message: "User not found" });
-	}
+    
+    if (user) {
+        res.json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            favorites: user.favorites.map((fav: any) => ({
+                ...fav.toObject(), // Convert Mongoose doc to plain object
+                _id: fav._id.toString(), // Convert ObjectId to string
+                events: fav.events?.map((event: any) => ({
+                    ...event.toObject(),
+                    _id: event._id.toString()
+                })) || []
+            })),
+        });
+    } else {
+        res.status(404).json({ message: "User not found" });
+    }
 };
 
 // @desc    Add favorite venue
