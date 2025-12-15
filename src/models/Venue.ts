@@ -6,6 +6,8 @@ export interface IVenue {
 	nameChinese?: string;
 	latitude: number;
 	longitude: number;
+	area: string;
+	district: string;
 	events?: any[];
 	comments?: any[];
 }
@@ -31,6 +33,14 @@ const VenueSchema = new Schema(
 		longitude: {
 			type: Number,
 			required: true,
+		},
+		area: {
+			type: String,
+			default: "Other",
+		},
+		district: {
+			type: String,
+			default: "Other",
 		},
 	},
 	{

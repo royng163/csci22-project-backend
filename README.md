@@ -31,6 +31,7 @@ Ensure you have the following installed:
    ```
    MONGO_URI=mongodb://localhost:27017/csci2720_project
    JWT_SECRET=your_jwt_secret_key_here
+   MAP_API_KEY=your_map_api_key_here
    ```
 
 ## 4. Server Start Commands

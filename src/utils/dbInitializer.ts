@@ -3,6 +3,27 @@ import xml2js from "xml2js";
 import Venue from "../models/Venue";
 import Event from "../models/Event";
 
+const getAddress = async (lat: number, lng: number): Promise<{ area: string; district: string }> => {
+	try {
+		const response = await axios.get(
+			`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.MAP_API_KEY}&language=en`
+		);
+
+		const result = response.data.results[0];
+		const districtComponent = result.address_components.find((c: any) => c.types.includes("neighborhood"));
+		const areaComponent = result.address_components.find((c: any) => c.types.includes("administrative_area_level_1"));
+
+		const district = districtComponent ? districtComponent.long_name : "Other";
+		const area = areaComponent ? areaComponent.long_name : "Other";
+
+		return { area, district };
+	} catch (error) {
+		console.error(`Geocoding error for ${lat},${lng}:`, error);
+	}
+
+	return { area: "Other", district: "Other" };
+};
+
 const initializeDB = async (): Promise<void> => {
 	try {
 		// Check if data already exists
@@ -26,12 +47,16 @@ const initializeDB = async (): Promise<void> => {
 
 			// Skip venues without latitude or longitude
 			if (isFinite(eventLatitude) && isFinite(eventLongitude)) {
+				const { area, district } = await getAddress(eventLatitude, eventLongitude);
+
 				const venue = new Venue({
 					venueId: venueData.$.id,
 					name: venueData.venuee,
 					nameChinese: venueData.venuec,
 					latitude: eventLatitude,
 					longitude: eventLongitude,
+					area,
+					district,
 				});
 				await venue.save();
 			}
@@ -61,8 +86,8 @@ const initializeDB = async (): Promise<void> => {
 					url: eventData.urle,
 					ticketAgentUrl: eventData.tagenturle,
 					telephone: eventData.enquiry,
-					presentor: eventData.presenterorgc,
-					presenterChinese: eventData.presenterorge,
+					presentor: eventData.presenterorge,
+					presenterChinese: eventData.presenterorgc,
 				});
 				await event.save();
 			}
