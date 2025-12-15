@@ -1,6 +1,6 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Document } from "mongoose";
 
-export interface IVenue {
+export interface IVenue extends Document {
 	venueId: string;
 	name: string;
 	nameChinese?: string;
@@ -65,5 +65,5 @@ VenueSchema.virtual("comments", {
 	justOne: false,
 });
 
-const Venue = model("Venue", VenueSchema);
+const Venue = model<IVenue>("Venue", VenueSchema);
 export default Venue;

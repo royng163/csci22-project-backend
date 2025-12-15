@@ -63,6 +63,24 @@ const createEvent = async (req: Request, res: Response) => {
 	}
 };
 
+// @desc    Get single event
+// @route   GET /api/events/:id
+// @access  Public
+const getEventById = async (req: Request, res: Response) => {
+	try {
+		const event = await Event.findById(req.params.id).populate("venue");
+
+		if (event) {
+			res.json(event);
+		} else {
+			res.status(404).json({ message: "Event not found" });
+		}
+	} catch (error: any) {
+		res.status(500).json({ message: error.message });
+	}
+};
+
+
 // @desc    Update an event
 // @route   PUT /api/events/:id
 // @access  Private/Admin
@@ -135,4 +153,4 @@ const deleteEvent = async (req: Request, res: Response) => {
 	}
 };
 
-export { getEvents, createEvent, updateEvent, deleteEvent };
+export { getEvents, getEventById, createEvent, updateEvent, deleteEvent };

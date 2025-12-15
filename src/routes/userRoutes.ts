@@ -13,8 +13,8 @@ import { protect, admin } from "../middleware/authMiddleware";
 const router = express.Router();
 
 router.get("/profile", protect, getUserProfile);
-router.post("/favorite/:id", protect, addFavorite);
-router.delete("/favorite/:id", protect, removeFavorite);
+router.post("/favorites/:id", protect, addFavorite);
+router.delete("/favorites/:id", protect, removeFavorite);
 
 router.route("/").get(protect, admin, getUsers).post(protect, admin, createUser);
 
