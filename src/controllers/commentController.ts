@@ -34,4 +34,22 @@ const addComment = async (req: Request, res: Response) => {
 	}
 };
 
-export { addComment };
+// @desc    Get comments for a venue
+// @route   GET /api/comments/:venueId
+// @access  Public (or Private depending on your needs)
+const getComments = async (req: Request, res: Response) => {
+	const { venueId } = req.params;
+
+	try {
+		const comments = await Comment.find({ venue: venueId })
+			.populate("user", "username") // Important: Get the username, not just ID
+			.sort({ createdAt: -1 });     // Sort by newest first
+
+		res.status(200).json(comments);
+	} catch (error: any) {
+		res.status(500).json({ message: error.message });
+	}
+};
+
+// Update the export
+export { addComment, getComments };
