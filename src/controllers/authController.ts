@@ -25,7 +25,6 @@ const signupUser = async (req: Request, res: Response) => {
 		email,
 		password,
 		role: role || "user",
-
 	});
 
 	if (user) {

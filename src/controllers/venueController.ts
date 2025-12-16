@@ -25,9 +25,9 @@ const getVenues = async (req: Request, res: Response) => {
 		venues = venues.slice(0, 10);
 
 		const venuesWithFavorites = venues.map((venue) => ({
-            ...venue.toObject(),
-            isFavorite: req.user?.favorites?.some((fav) => fav.toString() === venue._id.toString()) || false,
-        }));
+			...venue.toObject(),
+			isFavorite: req.user?.favorites?.some((fav) => fav.toString() === venue._id.toString()) || false,
+		}));
 
 		res.json(venues);
 	} catch (error: any) {
@@ -49,9 +49,9 @@ const getVenueById = async (req: Request, res: Response) => {
 
 		if (venue) {
 			const venueWithFavorite = {
-                ...venue.toObject(),
-                isFavorite: req.user?.favorites?.some((fav) => fav.toString() === venue._id.toString()) || false,
-            };
+				...venue.toObject(),
+				isFavorite: req.user?.favorites?.some((fav) => fav.toString() === venue._id.toString()) || false,
+			};
 			res.json(venueWithFavorite);
 		} else {
 			res.status(404).json({ message: "Venue not found" });
