@@ -1,11 +1,16 @@
 import User from "../models/User";
 
 export async function seedDefaultUsers() {
-	const adminUsername = process.env.ADMIN_USERNAME || "admin";
-	const adminPassword = process.env.ADMIN_PASSWORD || "Admin1234!";
+	const adminUsername = process.env.ADMIN_USERNAME;
+	const adminPassword = process.env.ADMIN_PASSWORD;
 
-	const userUsername = process.env.USER_USERNAME || "testuser";
-	const userPassword = process.env.USER_PASSWORD || "Test1234!";
+	const userUsername = process.env.USER_USERNAME;
+	const userPassword = process.env.USER_PASSWORD;
+
+	if (!adminUsername || !adminPassword || !userUsername || !userPassword) {
+		console.log("Skipping seedDefaultUsers: missing env vars");
+		return;
+	}
 
 	// Admin
 	const adminExists = await User.findOne({ username: adminUsername });
