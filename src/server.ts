@@ -42,5 +42,13 @@ app.get("/", (req: Request, res: Response) => {
 	res.send("API is running...");
 });
 
-// Start server
-app.listen(3000);
+// Export the app for deployment
+export default app;
+
+// Start server only if run locally
+if (require.main === module) {
+	const PORT = process.env.PORT || 3000;
+	app.listen(PORT, () => {
+		console.log(`Server running on port ${PORT}`);
+	});
+}
