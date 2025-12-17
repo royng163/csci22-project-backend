@@ -56,7 +56,7 @@ Note: On the very first run, the server will automatically fetch XML data from t
 ```
 src/
 ├── config/         # Database connection
-├── controllers/    # Request logic (Auth, Events, Venues, Users)
+├── controllers/    # Request logic (Auth, Events, Venues, Users, Comments)
 ├── middleware/     # Access mode validation
 ├── models/         # Mongoose Schemas (User, Venue, Event, Comment)
 ├── routes/         # API Route definitions
@@ -68,3 +68,4 @@ src/
 
 - TypeScript: Clearly define interface and type for every variable.
 - Formatting: Please install Prettier to format code. The `.prettierrc` config file standardize the formatting rules.
+
