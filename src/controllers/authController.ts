@@ -12,7 +12,12 @@ const generateToken = (id: string) => {
 // @route   POST /api/auth/signup
 // @access  Public
 const signupUser = async (req: Request, res: Response) => {
-	const { username, email, password, role } = req.body;
+	const { username, email, password } = req.body;
+
+	const reserved = new Set(["admin", "administrator"]);
+	if (reserved.has(String(username).toLowerCase())) {
+		return res.status(400).json({ message: "This username is reserved." });
+	}
 
 	const userExists = await User.findOne({ username });
 
@@ -24,7 +29,7 @@ const signupUser = async (req: Request, res: Response) => {
 		username,
 		email,
 		password,
-		role: role || "user",
+		role: "user",
 	});
 
 	if (user) {

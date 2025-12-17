@@ -8,14 +8,21 @@ import venueRoutes from "./routes/venueRoutes";
 import eventRoutes from "./routes/eventRoutes";
 import userRoutes from "./routes/userRoutes";
 import commentRoutes from "./routes/commentRoutes";
+import { seedDefaultUsers } from "./utils/seedUsers";
 
 // Load env vars
 dotenv.config();
 
 // Connect to database
-connectDB().then(() => {
-	initializeDB();
-});
+connectDB()
+	.then(async () => {
+		await initializeDB();
+		await seedDefaultUsers();
+	})
+	.catch((err) => {
+		console.error(err);
+		process.exit(1);
+	});
 
 const app = express();
 
