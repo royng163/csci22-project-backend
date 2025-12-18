@@ -17,6 +17,10 @@ const isStrongPassword = (password: string) => {
 	return hasLower && hasUpper && hasNumber && hasSymbol && hasMinLen;
 };
 
+const sendError = (res: Response, status: number, code: string, message: string) => {
+	return res.status(status).json({ code, message });
+};
+
 // @desc    Sign up a new user
 // @route   POST /api/auth/signup
 // @access  Public
@@ -25,27 +29,26 @@ const signupUser = async (req: Request, res: Response) => {
 
 	const cleanUsername = String(username || "").trim();
 	if (!cleanUsername || !password) {
-		return res.status(400).json({ message: "Username and password are required" });
+		return sendError(res, 400, "AUTH_MISSING_FIELDS", "Username and password are required");
 	}
 
 	const reserved = new Set(["admin", "administrator"]);
 	if (reserved.has(cleanUsername.toLowerCase())) {
-		return res.status(400).json({ message: "This username is reserved." });
+		return sendError(res, 400, "AUTH_USERNAME_RESERVED", "This username is reserved.");
 	}
 
 	if (!isStrongPassword(password)) {
-		return res.status(400).json({
-			message: "Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.",
-		});
+		return sendError(
+			res,
+			400,
+			"AUTH_WEAK_PASSWORD",
+			"Password must be at least 8 characters and include uppercase, lowercase, number, and symbol."
+		);
 	}
 
 	const userExists = await User.findOne({ username: cleanUsername });
 	if (userExists) {
-		return res.status(400).json({ message: "User already exists" });
-	}
-
-	if (userExists) {
-		return res.status(400).json({ message: "User already exists" });
+		return sendError(res, 400, "AUTH_USER_EXISTS", "User already exists");
 	}
 
 	const generatedEmail = `${cleanUsername.toLowerCase()}@local.test`;
@@ -66,7 +69,7 @@ const signupUser = async (req: Request, res: Response) => {
 			token: generateToken(user._id.toString()),
 		});
 	} else {
-		res.status(400).json({ message: "Invalid user data" });
+		return sendError(res, 400, "AUTH_INVALID_USER_DATA", "Invalid user data");
 	}
 };
 
@@ -87,7 +90,7 @@ const loginUser = async (req: Request, res: Response) => {
 			token: generateToken(user._id.toString()),
 		});
 	} else {
-		res.status(401).json({ message: "Invalid username or password" });
+		return sendError(res, 401, "AUTH_INVALID_CREDENTIALS", "Invalid username or password");
 	}
 };
 
