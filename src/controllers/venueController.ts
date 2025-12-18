@@ -15,15 +15,6 @@ const getVenues = async (req: Request, res: Response) => {
 
 		let venues = (await Venue.find(query).populate("events")) as IVenue[];
 
-		// Filter venues that host at least 3 events
-		venues = venues.filter((venue) => venue.events && venue.events.length >= 3);
-
-		// Randomize
-		venues = venues.sort(() => 0.5 - Math.random());
-
-		// Limit to 10 venues
-		venues = venues.slice(0, 10);
-
 		const venuesWithFavorites = venues.map((venue) => ({
 			...venue.toObject(),
 			isFavorite: req.user?.favorites?.some((fav) => fav.toString() === venue._id.toString()) || false,

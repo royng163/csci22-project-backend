@@ -41,25 +41,39 @@ const initializeDB = async (): Promise<void> => {
 		const venuesResponse = await axios.get("https://www.lcsd.gov.hk/datagovhk/event/venues.xml");
 		const venuesResult = await parser.parseStringPromise(venuesResponse.data);
 		const venuesList = venuesResult.venues.venue;
-		for (const venueData of venuesList) {
+
+		// Filter out venues without latitude or longitude
+		const validVenues = venuesList.filter((venue: any) => {
+			const lat = parseFloat(venue.latitude);
+			const lng = parseFloat(venue.longitude);
+			return isFinite(lat) && isFinite(lng);
+		});
+
+		// Fisher-Yates Shuffle for better randomness to avoid close together venues
+		for (let i = validVenues.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[validVenues[i], validVenues[j]] = [validVenues[j], validVenues[i]];
+		}
+
+		// Select only 10 venues
+		const selectedVenues = validVenues.slice(0, 10);
+
+		for (const venueData of selectedVenues) {
 			const eventLatitude = parseFloat(venueData.latitude);
 			const eventLongitude = parseFloat(venueData.longitude);
 
-			// Skip venues without latitude or longitude
-			if (isFinite(eventLatitude) && isFinite(eventLongitude)) {
-				const { area, district } = await getAddress(eventLatitude, eventLongitude);
+			const { area, district } = await getAddress(eventLatitude, eventLongitude);
 
-				const venue = new Venue({
-					venueId: venueData.$.id,
-					name: venueData.venuee,
-					nameChinese: venueData.venuec,
-					latitude: eventLatitude,
-					longitude: eventLongitude,
-					area,
-					district,
-				});
-				await venue.save();
-			}
+			const venue = new Venue({
+				venueId: venueData.$.id,
+				name: venueData.venuee,
+				nameChinese: venueData.venuec,
+				latitude: eventLatitude,
+				longitude: eventLongitude,
+				area,
+				district,
+			});
+			await venue.save();
 		}
 
 		// Populate Event Table
