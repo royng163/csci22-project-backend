@@ -42,11 +42,25 @@ const initializeDB = async (): Promise<void> => {
 		const venuesResult = await parser.parseStringPromise(venuesResponse.data);
 		const venuesList = venuesResult.venues.venue;
 
-		// Filter out venues without latitude or longitude
+		// Fetch Events
+		const eventResponse = await axios.get("https://www.lcsd.gov.hk/datagovhk/event/events.xml");
+		const eventResult = await parser.parseStringPromise(eventResponse.data);
+		const eventList = eventResult.events.event;
+
+		// Count events per venue
+		const eventCounts: { [key: string]: number } = {};
+		for (const event of eventList) {
+			const vId = event.venueid;
+			eventCounts[vId] = (eventCounts[vId] || 0) + 1;
+		}
+
+		// Filter out venues without latitude or longitude or with less than 3 events
 		const validVenues = venuesList.filter((venue: any) => {
 			const lat = parseFloat(venue.latitude);
 			const lng = parseFloat(venue.longitude);
-			return isFinite(lat) && isFinite(lng);
+			const hasCoordinates = isFinite(lat) && isFinite(lng);
+			const hasEnoughEvents = (eventCounts[venue.$.id] || 0) >= 3;
+			return hasCoordinates && hasEnoughEvents;
 		});
 
 		// Fisher-Yates Shuffle for better randomness to avoid close together venues
@@ -77,9 +91,6 @@ const initializeDB = async (): Promise<void> => {
 		}
 
 		// Populate Event Table
-		const eventResponse = await axios.get("https://www.lcsd.gov.hk/datagovhk/event/events.xml");
-		const eventResult = await parser.parseStringPromise(eventResponse.data);
-		const eventList = eventResult.events.event;
 		for (const eventData of eventList) {
 			const venue = await Venue.findOne({ venueId: eventData.venueid });
 
