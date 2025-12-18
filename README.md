@@ -32,6 +32,10 @@ Ensure you have the following installed:
    MONGO_URI=mongodb://localhost:27017/csci2720_project
    JWT_SECRET=your_jwt_secret_key_here
    MAP_API_KEY=your_map_api_key_here
+   ADMIN_USERNAME=admin
+   ADMIN_PASSWORD=Admin1234!
+   USER_USERNAME=testuser
+   USER_PASSWORD=Test1234!
    ```
 
 ## 4. Server Start Commands
@@ -68,4 +72,3 @@ src/
 
 - TypeScript: Clearly define interface and type for every variable.
 - Formatting: Please install Prettier to format code. The `.prettierrc` config file standardize the formatting rules.
-
